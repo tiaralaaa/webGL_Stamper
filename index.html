@@ -21,9 +21,10 @@ var vertexShaderSource =
        "uniform float u_width;\n" +
        "uniform float u_height;\n" +
        "uniform vec2 u_translation;\n" +
+       "uniform float u_scale; \n" + //scaling uniform
        "void main() {\n" +
-       "   float x = -1.0 + 2.0*((a_coords.x + u_translation.x) / u_width);\n" +
-       "   float y = 1.0 - 2.0*((a_coords.y + u_translation.y) / u_height);\n" +
+       "   float x = -1.0 + 2.0*((a_coords.x * u_scale + u_translation.x) / u_width);\n" +
+       "   float y = 1.0 - 2.0*((a_coords.y * u_scale + u_translation.y) / u_height);\n" +
        "   gl_Position = vec4(x, y, 0.0, 1.0);\n" +
        "}\n";
 
@@ -44,6 +45,7 @@ var uniformHeight;  // Location of uniform named "u_height"
 var uniformColor;   // Location of uniform named "u_color" (for RGB components)
 var uniformAlpha;   // Location of uniform named "u_alpha" (for alpha components)
 var uniformTranslation;  // Location of the "u_translation" uniform
+var uniformScale;   // Location of uniform named "u_scale"
 
 var attributeCoords;  // Location of the attribute named "a_coords".
 
@@ -107,9 +109,11 @@ function putShape(x, y) {
     
     var color = Number(document.getElementById("colorChoice").value);
     var alpha = Number(document.getElementById("opacityChoice").value);
+    var scale = Number(document.getElementById("scaleChoice").value); //get the scale val
     
     gl.uniform3fv( uniformColor, colorList[color] );
     gl.uniform1f( uniformAlpha, alpha );
+    gl.uniform1f( uniformScale, scale); // pass the scale val
     
     /* Get the shape selection from the pop-up menu, and draw the shape.  To get
        the correct data into the shader, we have to call gl.vertexAttribPointer
@@ -286,6 +290,7 @@ function initGL() {
     uniformColor = gl.getUniformLocation(prog, "u_color");
     uniformAlpha = gl.getUniformLocation(prog, "u_alpha");
     uniformTranslation = gl.getUniformLocation(prog, "u_translation");
+    uniformScale = gl.getUniformLocation(prog, "u_scale"); //pass the scale value to the location of uniform
     gl.uniform1f(uniformHeight, canvas.height);
     gl.uniform1f(uniformWidth, canvas.width);
     gl.enable(gl.BLEND);
@@ -329,6 +334,7 @@ function init() {
     document.getElementById("shapeChoice").value = "Star";
     document.getElementById("colorChoice").value = "0";
     document.getElementById("opacityChoice").value = "0.5";
+    document.getElementById("scaleChoice").value = "1.0";
     canvas.addEventListener("mousedown", doMouseDown, false);
     canvas.addEventListener("touchstart", doTouch, false);
     document.getElementById("clearButton").onclick = function() {
@@ -371,6 +377,22 @@ function init() {
         <option value="5">Yellow</option>
         <option value="6">Black</option>
         <option value="7">Gray</option>
+    </select></label>
+</p>
+<!--new scale function-->
+<p>
+    <label><b>Scale:</b><br>
+    <select id="scaleChoice">
+        <option value="2.5">2.5x</option>
+        <option value="2.25">2.25x</option>
+        <option value="2.0">2x</option>
+        <option value="1.75">1.75x</option>
+        <option value="1.5">1.5x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.0">1x</option>
+        <option value="0.75">0.75x</option>
+        <option value="0.5">0.5x</option>
+        <option value="0.25">0.25x</option>
     </select></label>
 </p>
 <p>
