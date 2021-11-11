@@ -52,8 +52,9 @@ var attributeCoords;  // Location of the attribute named "a_coords".
 var bufferCoordsCircle;   // A vertex buffer object to hold the values for coords of circle
 var bufferCoordsSquare;   //  ...of the square
 var bufferCoordsTriangle; //  ...of the triangle
-var bufferCoordsStar;     //  ...and of the star.
-var bufferCoordsRectangle;
+var bufferCoordsStar;     //  ... of the star.
+var bufferCoordsRectangle;  //  ... of the rectangle.
+var bufferCoordsScalene;     //  ... and of the scalene.
 
 var colorList = [ // available colors for shapes
         [ 1, 0, 0 ],
@@ -141,6 +142,10 @@ function putShape(x, y) {
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsRectangle);
             gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
             gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+        case "Scalene":
+        gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsScalene);
+            gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);
             break;
         default: // "Star
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsStar);
@@ -243,6 +248,20 @@ function createShapeBuffers() {
 
     bufferCoordsRectangle = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferCoordsRectangle );
+    gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
+
+    //to create scalene
+    coords = new Float32Array(6);
+    coords[0] = -50;
+    coords[1] = +40;
+    coords[2] = +50;
+    coords[3] = +40;
+    coords[4] = +100;
+    coords[5] = -50;
+    
+
+    bufferCoordsScalene = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferCoordsScalene );
     gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
 }
 
@@ -364,6 +383,7 @@ function init() {
         <option>Star</option>
         <!--additional shapes-->
         <option>Rectangle</option>
+        <option>Scalene</option>
     </select></label>
 </p>
 <p>
