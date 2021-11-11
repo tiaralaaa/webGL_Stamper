@@ -51,6 +51,7 @@ var bufferCoordsCircle;   // A vertex buffer object to hold the values for coord
 var bufferCoordsSquare;   //  ...of the square
 var bufferCoordsTriangle; //  ...of the triangle
 var bufferCoordsStar;     //  ...and of the star.
+var bufferCoordsRectangle;
 
 var colorList = [ // available colors for shapes
         [ 1, 0, 0 ],
@@ -60,7 +61,7 @@ var colorList = [ // available colors for shapes
         [ 1, 0, 1 ],
         [ 1, 1, 0 ],
         [ 0, 0, 0 ],
-        [ 0.5, 0.5, 0.5 ]
+        [ 0.5, 0.5, 0.5 ],
     ];
 
 /**
@@ -131,6 +132,11 @@ function putShape(x, y) {
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsTriangle);
             gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
             gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);
+            break;
+        case "Rectangle":
+            gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsRectangle);
+            gl.vertexAttribPointer(attributeCoords, 2, gl.FLOAT, false, 0, 0);
+            gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
             break;
         default: // "Star
             gl.bindBuffer(gl.ARRAY_BUFFER, bufferCoordsStar);
@@ -216,6 +222,23 @@ function createShapeBuffers() {
 
     bufferCoordsStar = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferCoordsStar );
+    gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
+
+
+    //ADDITIONAL SHAPES
+    //to create rectangle
+    coords = new Float32Array(8);
+    coords[0] = -80;
+    coords[1] = -40;
+    coords[2] = -80;
+    coords[3] = +40;
+    coords[4] = +80;
+    coords[5] = +40;
+    coords[6] = +80;
+    coords[7] = -40;
+
+    bufferCoordsRectangle = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferCoordsRectangle );
     gl.bufferData(gl.ARRAY_BUFFER, coords, gl.STATIC_DRAW);
 }
 
@@ -333,6 +356,8 @@ function init() {
         <option>Square</option>
         <option>Triangle</option>
         <option>Star</option>
+        <!--additional shapes-->
+        <option>Rectangle</option>
     </select></label>
 </p>
 <p>
